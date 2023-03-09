@@ -1,11 +1,10 @@
 package abdulrahman.ali19.klim.data.remote.requst
 
-import abdulrahman.ali19.klim.BuildConfig
-import abdulrahman.ali19.klim.data.remote.api.Endpoints
 import abdulrahman.ali19.klim.basic.BaseRequestFactory
+import abdulrahman.ali19.klim.data.remote.api.Endpoints
 
 class HomeRequest : BaseRequestFactory() {
 
-    override fun getEndPoint(): String = BuildConfig.BASE_URL + Endpoints.DINOSAURS
+    override fun getEndPoint(): String = Endpoints.DINOSAURS
 
 }
