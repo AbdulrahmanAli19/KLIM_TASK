@@ -24,10 +24,22 @@ android {
 
     buildTypes {
         getByName("release") {
+            buildConfigField("String", "BASE_URL", "\"https://dinosaur-facts-api.shultzlab.com/\"")
             isMinifyEnabled = true
             isShrinkResources = true
             isDebuggable = false
             isJniDebuggable = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        getByName("debug") {
+            buildConfigField("String", "BASE_URL", "\"https://dinosaur-facts-api.shultzlab.com/\"")
+            isMinifyEnabled = false
+            isShrinkResources = false
+            isDebuggable = true
+            isJniDebuggable = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -67,6 +79,8 @@ dependencies {
 
     val lifecycleVersion by extra("2.6.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
 
     val coroutinesVersion by extra("1.6.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
