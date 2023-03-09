@@ -12,10 +12,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 abstract class BaseFragment : Fragment() {
 
-    abstract var _baseBinding: ViewBinding?
+    var _baseBinding: ViewBinding? = null
+    open val retryBtn: () -> Unit = {}
     private var dialog: AlertDialog? = null
 
     fun showData() {
@@ -47,12 +50,14 @@ abstract class BaseFragment : Fragment() {
                 binding.retryBtn.isVisible = true
                 binding.message.isVisible = true
                 binding.progressCircular.isVisible = false
+                binding.retryBtn.setOnClickListener { retryBtn() }
             }
             is ResultState.Error -> {
                 binding.message.text = res.errorString
                 binding.retryBtn.isVisible = true
                 binding.message.isVisible = true
                 binding.progressCircular.isVisible = false
+                binding.retryBtn.setOnClickListener { retryBtn() }
             }
             ResultState.Loading -> {
                 binding.progressCircular.isVisible = true

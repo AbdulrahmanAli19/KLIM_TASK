@@ -13,13 +13,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
+@AndroidEntryPoint
 class HomeFragment() : BaseFragment() {
 
-    override var _baseBinding: ViewBinding? = binding
     private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
+    private val binding by lazy { _binding!! }
 
     private val viewModel: HomeViewModel by viewModels()
 
@@ -28,6 +28,7 @@ class HomeFragment() : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _baseBinding = binding
         return binding.root
     }
 
@@ -35,6 +36,8 @@ class HomeFragment() : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         handleResponse()
     }
+
+    override val retryBtn: () -> Unit = { handleResponse() }
 
     private fun handleResponse() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -49,7 +52,6 @@ class HomeFragment() : BaseFragment() {
                 }
             }
         }
-
     }
 
     override fun onDestroy() {
