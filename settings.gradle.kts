@@ -1,3 +1,7 @@
+
+rootProject.name = "KLIM"
+include(":app")
+
 pluginManagement {
     repositories {
         google()
@@ -5,6 +9,8 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+@Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -12,5 +18,4 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "KLIM"
-include ':app'
+
