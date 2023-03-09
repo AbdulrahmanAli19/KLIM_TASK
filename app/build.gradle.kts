@@ -24,10 +24,22 @@ android {
 
     buildTypes {
         getByName("release") {
+            buildConfigField("String", "BASE_URL", "\"https://dinosaur-facts-api.shultzlab.com/\"")
             isMinifyEnabled = true
             isShrinkResources = true
             isDebuggable = false
             isJniDebuggable = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        getByName("debug") {
+            buildConfigField("String", "BASE_URL", "\"https://dinosaur-facts-api.shultzlab.com/\"")
+            isMinifyEnabled = false
+            isShrinkResources = false
+            isDebuggable = true
+            isJniDebuggable = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
