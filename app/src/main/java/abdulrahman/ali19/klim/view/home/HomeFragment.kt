@@ -1,27 +1,32 @@
 package abdulrahman.ali19.klim.view.home
 
+import abdulrahman.ali19.klim.basic.BaseFragment
+import abdulrahman.ali19.klim.basic.ResultState
+import abdulrahman.ali19.klim.data.pojo.DinosaurResponse
+import abdulrahman.ali19.klim.databinding.FragmentHomeBinding
+import abdulrahman.ali19.klim.view.home.adapters.HomeAdapter
+import abdulrahman.ali19.klim.view.home.viewmodel.HomeViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import abdulrahman.ali19.klim.basic.BaseFragment
-import abdulrahman.ali19.klim.basic.ResultState
-import abdulrahman.ali19.klim.databinding.FragmentHomeBinding
-import abdulrahman.ali19.klim.view.home.viewmodel.HomeViewModel
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.viewbinding.ViewBinding
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
 @AndroidEntryPoint
-class HomeFragment() : BaseFragment() {
+class HomeFragment : BaseFragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding by lazy { _binding!! }
 
     private val viewModel: HomeViewModel by viewModels()
+
+    private var _homeAdapter: HomeAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,7 +42,10 @@ class HomeFragment() : BaseFragment() {
         handleResponse()
     }
 
-    override val retryBtn: () -> Unit = { handleResponse() }
+    override val retryBtn: () -> Unit = {
+        super.retryBtn()
+        handleResponse()
+    }
 
     private fun handleResponse() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -46,12 +54,25 @@ class HomeFragment() : BaseFragment() {
                     when (res) {
                         is ResultState.Success -> {
                             showData()
+                            setupRecycler(res.data)
                         }
                         else -> showDialog(res)
                     }
                 }
             }
         }
+    }
+
+    private fun setupRecycler(data: List<DinosaurResponse>) {
+        if (_homeAdapter == null) {
+            _homeAdapter = HomeAdapter(data)
+            binding.recycler.apply {
+                layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                adapter = _homeAdapter
+            }
+        } else
+            _homeAdapter?.updateList(data)
     }
 
     override fun onDestroy() {

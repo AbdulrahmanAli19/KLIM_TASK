@@ -8,6 +8,6 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="abdulrahman.ali19.klim.view.home.HomeFragment"
-        android:label="fragment_home"
+        android:label="@string/home_fragment"
         tools:layout="@layout/fragment_home" />
 </navigation>

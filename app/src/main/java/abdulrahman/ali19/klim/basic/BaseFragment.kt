@@ -17,32 +17,24 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 abstract class BaseFragment : Fragment() {
 
+    open val retryBtn: () -> Unit = {
+        dialog?.dismiss()
+        dialog = null
+    }
+
     var _baseBinding: ViewBinding? = null
-    open val retryBtn: () -> Unit = {}
     private var dialog: AlertDialog? = null
 
     fun showData() {
         _baseBinding?.root?.isVisible = true
         dialog?.dismiss()
+        dialog = null
     }
 
     fun showDialog(res: ResultState<List<DinosaurResponse>>) {
         _baseBinding?.root?.isVisible = false
 
-        val builder = AlertDialog.Builder(requireContext(), R.style.alert_dialog_theme)
         val binding = DialogLayoutBinding.inflate(LayoutInflater.from(requireContext()))
-        builder.setView(binding.root)
-        dialog = builder.create()
-
-        dialog?.window?.apply {
-            setLayout(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.MATCH_PARENT
-            )
-            setBackgroundDrawable(ColorDrawable(Color.WHITE))
-            setGravity(Gravity.CENTER)
-        }
-
 
         when (res) {
             ResultState.EmptyResult -> {
@@ -63,9 +55,27 @@ abstract class BaseFragment : Fragment() {
                 binding.progressCircular.isVisible = true
                 binding.retryBtn.isVisible = false
                 binding.image.isVisible = false
+                binding.message.isVisible = false
             }
             else -> {}
         }
+
+        dialog?.dismiss()
+        dialog = null
+
+        val builder = AlertDialog.Builder(requireContext(), R.style.alert_dialog_theme)
+        builder.setView(binding.root)
+        dialog = builder.create()
+
+        dialog?.window?.apply {
+            setLayout(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT
+            )
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            setGravity(Gravity.CENTER)
+        }
+
         dialog?.show()
     }
 
