@@ -15,25 +15,23 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
 class HomeFragment : BaseFragment() {
-
-    private var _binding: FragmentHomeBinding? = null
-    private val binding by lazy { _binding!! }
 
     private val viewModel: HomeViewModel by viewModels()
 
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+
     private var _homeAdapter: HomeAdapter? = null
+    private val homeAdapter get() = _homeAdapter!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        _baseBinding = binding
         return binding.root
     }
 
@@ -69,15 +67,14 @@ class HomeFragment : BaseFragment() {
             binding.recycler.apply {
                 layoutManager =
                     LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-                adapter = _homeAdapter
+                adapter = homeAdapter
             }
-        } else
-            _homeAdapter?.updateList(data)
+        } else homeAdapter.updateList(data)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-        _baseBinding = null
+        _homeAdapter = null
     }
 }
